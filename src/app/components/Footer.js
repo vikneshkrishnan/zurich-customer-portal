@@ -1,12 +1,8 @@
 import React from 'react';
 
-
-
 export default function Footer (){
   return <div style={footerStyle}>Footer</div>;
 };
-
-
 
 const footerStyle = {
   textAlign: 'center',

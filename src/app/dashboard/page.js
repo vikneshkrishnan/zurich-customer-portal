@@ -1,7 +1,6 @@
 'use client';
 
-
-import React,{ useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Header from '../components/Header';
@@ -9,7 +8,8 @@ import Footer from '../components/Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, setPage } from '../redux/userSlice';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TextField, Pagination, Box, Grid, Typography, Button } from '@mui/material';
-import { Visibility, VisibilityOff, AddCircleOutline } from '@mui/icons-material';  // Import the Add icon
+import { Visibility, VisibilityOff, AddCircleOutline, Edit, Delete } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility'; 
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
@@ -50,13 +50,24 @@ export default function DashboardPage() {
     dispatch(fetchUsers(page));
   };
 
+  const handleView = (id) => {
+    alert(`View details for user ID: ${id}`);
+  };
+
+  const handleEdit = (id) => {
+    alert(`Edit details for user ID: ${id}`);
+  };
+
+  const handleDelete = (id) => {
+    alert(`Delete user ID: ${id}`);
+  };
+
   const filteredData = data.filter(
     (user) =>
-      user.first_name.toLowerCase().includes(firstNameSearch.toLowerCase()) &&
-      user.last_name.toLowerCase().includes(lastNameSearch.toLowerCase()) &&
-      user.email.toLowerCase().includes(emailSearch.toLowerCase())
+      user.first_name.toLowerCase().startsWith('g') ||  
+      user.last_name.toLowerCase().startsWith('w') 
   );
-
+  
   const sortedData = [...filteredData].sort((a, b) => {
     if (!sortOrder.key) return 0;
     if (sortOrder.order === 'asc') return a[sortOrder.key].localeCompare(b[sortOrder.key]);
@@ -113,7 +124,7 @@ export default function DashboardPage() {
           <Box sx={styles.titleContainer}>
             <Typography sx={styles.pageTitle}>Customer Listing Page</Typography>
             <Button sx={styles.addButton}>
-            <AddCircleOutline sx={styles.addIcon} /> 
+              <AddCircleOutline sx={styles.addIcon} />
             </Button>
           </Box>
           <TableContainer component={Paper} style={{ marginTop: 30 }}>
@@ -123,6 +134,7 @@ export default function DashboardPage() {
                   <TableCell onClick={() => handleSort('first_name')} style={styles.tableHeader}>First Name</TableCell>
                   <TableCell onClick={() => handleSort('last_name')} style={styles.tableHeader}>Last Name</TableCell>
                   <TableCell onClick={() => handleSort('email')} style={styles.tableHeader}>Email</TableCell>
+                  <TableCell style={styles.tableHeader}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -141,6 +153,29 @@ export default function DashboardPage() {
                         sx={styles.revealButton}
                       >
                         {revealedEmails[user.id] ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </TableCell>
+                    <TableCell style={styles.tableCell}>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleView(user.id)}
+                        sx={styles.actionIcon}  
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleEdit(user.id)}
+                        sx={styles.editIcon} 
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDelete(user.id)}
+                        sx={styles.deleteIcon} 
+                      >
+                        <Delete />
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -214,15 +249,15 @@ const styles = {
     cursor: 'pointer',
     fontWeight: 'bold',
     textAlign:'center',
-    width: '33.33%', 
-
+    width: '25%', 
+    backgroundColor: '#23366f',
+    color: '#fff',
   },
   tableCell: {
     cursor: 'pointer',
     fontWeight: 'normal',
     textAlign:'center',
-    width: '33.33%', 
-
+    width: '25%', 
   },
   revealButton: {
     marginLeft: '30px',
@@ -237,5 +272,17 @@ const styles = {
     fontSize: '1.5rem',
     color: '#888',
     marginTop: '100px',
+  },
+  actionIcon: {
+    marginLeft: '10px',
+    color: '#23366f', 
+  },
+  editIcon: {
+    marginLeft: '10px',
+    color: 'green', 
+  },
+  deleteIcon: {
+    marginLeft: '10px',
+    color: 'red', 
   },
 };

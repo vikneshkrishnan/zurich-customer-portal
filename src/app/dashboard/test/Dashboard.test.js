@@ -7,9 +7,8 @@ import { useRouter } from 'next/navigation';
 import DashboardPage from '../page';
 import { store } from '../../redux/store';
 import { fetchUsers } from '../../redux/userSlice';
-import { configureStore } from '@reduxjs/toolkit'; // <-- Import configureStore
+import { configureStore } from '@reduxjs/toolkit'; 
 
-// Mock necessary dependencies
 jest.mock('next-auth/react');
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
@@ -22,18 +21,15 @@ describe('DashboardPage Component', () => {
   const mockPush = jest.fn();
 
   beforeEach(() => {
-    // Mock the useRouter
     useRouter.mockReturnValue({
       push: mockPush,
     });
 
-    // Mock useSession
     useSession.mockReturnValue({
       data: { user: { name: 'John Doe', email: 'john@example.com' } },
       status: 'authenticated',
     });
 
-    // Reset fetchUsers mock
     fetchUsers.mockReturnValue({
       type: 'users/fetchUsers',
       payload: { data: [], total_pages: 1 },
@@ -51,16 +47,13 @@ describe('DashboardPage Component', () => {
       </Provider>
     );
 
-    // Check if title is rendered
     const title = screen.getByText(/Customer Listing Page/i);
     expect(title).toBeInTheDocument();
 
-    // Check if search fields are rendered
     expect(screen.getByLabelText(/Search by First Name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Search by Last Name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Search by Email/i)).toBeInTheDocument();
 
-    // Check if the fetchUsers action was called
     expect(fetchUsers).toHaveBeenCalled();
   });
 
@@ -76,7 +69,6 @@ describe('DashboardPage Component', () => {
       </Provider>
     );
 
-    // Check if the user is redirected to the signin page
     expect(mockPush).toHaveBeenCalledWith('/auth/signin');
   });
 
@@ -91,12 +83,10 @@ describe('DashboardPage Component', () => {
     const lastNameInput = screen.getByLabelText(/Search by Last Name/i);
     const emailInput = screen.getByLabelText(/Search by Email/i);
 
-    // Simulate user typing in search fields
     fireEvent.change(firstNameInput, { target: { value: 'G' } });
     fireEvent.change(lastNameInput, { target: { value: 'W' } });
     fireEvent.change(emailInput, { target: { value: 'example' } });
 
-    // Check if the inputs have the correct value
     expect(firstNameInput.value).toBe('G');
     expect(lastNameInput.value).toBe('W');
     expect(emailInput.value).toBe('example');
