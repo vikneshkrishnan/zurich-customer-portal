@@ -1,0 +1,21 @@
+// {
+//   "compilerOptions": {
+//     "paths": {
+//       "@/*": ["./src/*"]
+//     }
+//   }
+// }
+
+
+{
+  "compilerOptions": {
+    "baseUrl": "src", 
+    "paths": {
+      "components/*": ["components/*"],
+      "auth/*": ["auth/*"],
+      "redux/*": ["redux/*"],
+      "store/*": ["store/*"]
+    }
+  },
+  "exclude": ["node_modules", ".next"]
+}
